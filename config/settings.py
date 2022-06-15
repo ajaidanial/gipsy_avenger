@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "app",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -39,9 +40,9 @@ MIDDLEWARE = [
 ]
 
 # Urls
-WSGI_APPLICATION = "gipsy_avenger.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 APPEND_SLASH = True
-ROOT_URLCONF = "gipsy_avenger.urls"
+ROOT_URLCONF = "config.urls"
 
 # Templates
 TEMPLATES = [
