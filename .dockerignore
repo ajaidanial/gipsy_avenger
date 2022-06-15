@@ -1,0 +1,31 @@
+# OS & Others
+.DS_Store
+.vagrant
+.travis.yml
+node_modules
+
+# GIT Files
+.github
+.gitlab-ci.yml
+.gitignore
+.git
+.gitattributes
+.pre-commit-config.yaml
+
+# IDE Files
+.editorconfig
+.vscode
+.idea
+
+# Django & Python Files
+venv
+*.pyc
+*.py[cod]
+__pycache__
+*.mo
+*.db
+
+# Caching
+CACHE
+.sass-cache
+.cache
