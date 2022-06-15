@@ -8,8 +8,8 @@ env = environ.Env()
 env.read_env(str(BASE_DIR / ".env"))
 
 # General
-SECRET_KEY = "django-insecure-z%(--7d4!gcm@9%um*mo6pfmjo43z0h-atzrp#oqztrz(ioc6&"
-DEBUG = True
+SECRET_KEY = env.str("SECRET_KEY", "secret")
+DEBUG = env.bool("DEBUG", True)
 ALLOWED_HOSTS = ["*"]
 
 # Timezone & Localization
@@ -89,3 +89,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+# AWS Configurations
+AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
+AWS_REGION_NAME = env.str("AWS_REGION_NAME", "")
