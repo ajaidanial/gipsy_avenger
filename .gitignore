@@ -247,3 +247,20 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/django,macos,linux,windows
+
+### Custom App Config
+
+# IDE's
+.vscode/*
+.idea/*
+
+# staticfiles
+staticfiles/
+
+# don't ignore keep files
+!.gitkeep
+
+# backups
+backups/*.sql.*
+
+### End of Custom App Config
