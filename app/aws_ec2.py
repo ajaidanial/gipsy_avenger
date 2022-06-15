@@ -18,6 +18,33 @@ class AwsEc2Client:
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         )
 
+    def get_all_instances(self, result=[], **kwargs) -> list[dict]:  # noqa
+        """Returns all the `InstanceId` and `KeyName` of the instances."""
+
+        # response
+        response = self.client.describe_instances(**kwargs)
+
+        # generate result
+        for reservation in response["Reservations"]:
+            for instance in reservation["Instances"]:
+                result.append(
+                    {
+                        "id": instance["InstanceId"],
+                        "tags": [
+                            _["Value"] for _ in instance["Tags"] if _["Key"] == "Name"
+                        ],
+                        "instance_type": instance["InstanceType"],
+                    }
+                )
+        NextToken = response.get("NextToken", None)
+
+        # end of result
+        if not NextToken:
+            return result
+
+        # recursive query from aws
+        return self.get_all_instances(result=result, NextToken=NextToken)
+
     def get_all_instance_types(self, result=[], **kwargs) -> list:  # noqa
         """
         Returns all the available EC2 `instance_types` like r6gd.2xlarge etc.
