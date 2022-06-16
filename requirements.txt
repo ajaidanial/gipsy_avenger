@@ -3,6 +3,8 @@ django==4.0.5
 psycopg2==2.9.3
 django-environ==0.8.1
 boto3==1.24.9
+django-crispy-forms==1.14.0
+crispy-bootstrap5==0.6
 
 # Architecture & Async
 redis==4.1.4
