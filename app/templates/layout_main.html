@@ -29,7 +29,7 @@
 
                         {% for link in navbar_links %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == link.url %}active{% endif %}"
+                            <a class="nav-link {% if link.highlight in request.path %}active{% endif %}"
                                 href="{{ link.url }}">{{ link.display }}</a>
                         </li>
                         {% endfor %}
