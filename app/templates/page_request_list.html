@@ -1,7 +1,12 @@
 {% extends 'layout_main.html' %}
 
 {% block main_content %}
-<p class="fs-4">Scheduled Requests</p>
+<div class="d-flex justify-content-between">
+    <p class="fs-4">Scheduled Requests</p>
+
+    <a class="btn btn-primary" style="height: fit-content;" href="{% url 'request_create_page_view' %}"
+        role="button">Add New</a>
+</div>
 
 <div class="table-responsive">
     <table class="table table-striped table-bordered mb-0">
