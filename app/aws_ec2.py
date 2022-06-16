@@ -109,10 +109,13 @@ class AwsEc2Client:
             2. https://aws.amazon.com/ec2/instance-types/
         """
 
-        return self.get_all_results(
+        result = self.get_all_results(
             client_method="describe_instance_types",
             pre_processor=lambda data: data["InstanceType"],
         )
+        result.sort()
+
+        return result
 
 
 def get_client():
