@@ -61,6 +61,20 @@
         </div>
     </footer>
 
+    {% if messages %}
+    {% for message in messages %}
+    <div style="position: fixed; top: 20px; z-index: 10000; right: 20px;"
+        class="toast align-items-center text-white bg-success border-0 show">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

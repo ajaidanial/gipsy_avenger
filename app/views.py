@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView
@@ -38,6 +39,12 @@ class AlterEC2RequestCreateView(CreateView):
     template_name = "page_request_create.html"
     success_url = reverse_lazy("request_list_page_view")
 
+    def get_success_url(self):
+        messages.add_message(
+            self.request, messages.SUCCESS, "Successfully created the request!"
+        )
+        return super().get_success_url()
+
 
 class AlterEC2RequestListView(ListView):
     """View to list all the scheduled requests."""
@@ -57,3 +64,9 @@ class AlterEC2RequestDeleteView(DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.delete(request=request, *args, **kwargs)
+
+    def get_success_url(self):
+        messages.add_message(
+            self.request, messages.SUCCESS, "Successfully deleted the request!"
+        )
+        return super().get_success_url()
