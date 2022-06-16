@@ -42,7 +42,7 @@ class AlterEC2RequestCreateView(CreateView):
 class AlterEC2RequestListView(ListView):
     """View to list all the scheduled requests."""
 
-    queryset = AlterEC2Request.objects.all()
+    queryset = AlterEC2Request.objects.order_by("-created").all()
     template_name = "page_request_list.html"
 
 
