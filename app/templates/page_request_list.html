@@ -1,0 +1,36 @@
+{% extends 'layout_main.html' %}
+
+{% block main_content %}
+<p class="fs-4">Scheduled Requests</p>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered mb-0">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Day & Date</th>
+                <th scope="col">Instance</th>
+                <th scope="col">To Instance Type</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if object_list %}
+            {% for object in object_list %}
+            <tr>
+                <td>{{ object.name }}</td>
+                <td>{{ object.get_day_of_action_display|title }} {{ object.time_of_action }}</td>
+                <td>{{ object.instance_name }}</td>
+                <td>{{ object.change_to_instance_type }}</td>
+                <td><a href="{% url 'request_delete_page_view' pk=object.pk %}">Delete</a></td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td class="text-center" colspan="100%">Nothing to show</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
