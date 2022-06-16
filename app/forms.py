@@ -31,6 +31,10 @@ class AlterEC2RequestForm(ModelForm):
             choices=[(_, _) for _ in get_client().get_all_instance_types()]
         )
 
+        # widget customisation
+        self.fields["time_of_action"].widget.input_type = "time"
+        self.fields["time_of_action"].widget.attrs["step"] = "1800"  # every 30 minutes
+
     def save(self, commit=True):
         """Custom data insert on save."""
 
