@@ -140,6 +140,35 @@ class AwsEc2Client:
 
         return self.get_instance(instance_id)["State"]["Name"]
 
+    def start_instance(self, instance_id) -> (bool, str):
+        """
+        Given the instance_id, this will start the instance and will
+        wait for the instance to finish starting.
+        """
+
+        try:
+            # initial checking
+            state = self.get_instance_state(instance_id)
+            assert (
+                state == "stopped"
+            ), "Instance is not in stopped state."  # let it go to the FE
+
+            # start instance
+            self.client.start_instances(InstanceIds=[instance_id])
+
+            # wait till started
+            while state != "running":
+
+                print(f"Waiting for instance to start. Current state: {state}.")  # noqa
+                time.sleep(10)
+
+                state = self.get_instance_state(instance_id)
+
+        except Exception as e:
+            return False, str(e)
+
+        return True, None
+
     def stop_instance(self, instance_id) -> (bool, str):
         """
         Given the instance_id, this will stop the instance, wait for the
