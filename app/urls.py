@@ -21,4 +21,9 @@ urlpatterns = [
         views.AlterEC2RequestDeleteView.as_view(),
         name="request_delete_page_view",
     ),
+    path(
+        "auth/login/",
+        views.AppLoginView.as_view(),
+        name="login_page_view",
+    ),
 ]
