@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import environ
+from django.urls import reverse_lazy
 
 # Environment Helpers
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,6 +96,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+LOGIN_URL = reverse_lazy("login_page_view")
+LOGIN_REDIRECT_URL = reverse_lazy("dashboard_page_view")
 
 # AWS Configurations
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
