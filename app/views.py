@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView
@@ -13,7 +15,7 @@ def server_ping_view(request):  # noqa
     return HttpResponse("Pong!")
 
 
-class DashboardPageView(TemplateView):
+class DashboardPageView(LoginRequiredMixin, TemplateView):
     """Landing page after authentication for the user."""
 
     template_name = "page_dashboard.html"
@@ -32,7 +34,7 @@ class DashboardPageView(TemplateView):
         return data
 
 
-class AlterEC2RequestCreateView(CreateView):
+class AlterEC2RequestCreateView(LoginRequiredMixin, CreateView):
     """View to create a scheduled request."""
 
     form_class = AlterEC2RequestForm
@@ -46,14 +48,14 @@ class AlterEC2RequestCreateView(CreateView):
         return super().get_success_url()
 
 
-class AlterEC2RequestListView(ListView):
+class AlterEC2RequestListView(LoginRequiredMixin, ListView):
     """View to list all the scheduled requests."""
 
     queryset = AlterEC2Request.objects.order_by("-created").all()
     template_name = "page_request_list.html"
 
 
-class AlterEC2RequestDeleteView(DeleteView):
+class AlterEC2RequestDeleteView(LoginRequiredMixin, DeleteView):
     """View to delete a given scheduled request."""
 
     queryset = AlterEC2Request.objects.all()
@@ -70,3 +72,9 @@ class AlterEC2RequestDeleteView(DeleteView):
             self.request, messages.SUCCESS, "Successfully deleted the request!"
         )
         return super().get_success_url()
+
+
+class AppLoginView(DjangoLoginView):
+    """View to make the user login to the application."""
+
+    template_name = "page_login.html"
