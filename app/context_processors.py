@@ -10,6 +10,6 @@ def template_common(request):
         "my_username": "ajaidanial",
         "navbar_links": [
             {"display": "Dashboard", "url": reverse_lazy("dashboard_page_view")},
-            {"display": "Requests", "url": "#"},
+            {"display": "Requests", "url": reverse_lazy("request_list_page_view")},
         ],
     }
