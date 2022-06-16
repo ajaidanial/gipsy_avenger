@@ -24,6 +24,7 @@ class AlterEC2Request(models.Model):
     time_of_action = models.TimeField()
 
     instance_for_action = models.CharField(max_length=255)
+    instance_name = models.CharField(max_length=255)
     change_to_instance_type = models.CharField(max_length=255)
 
     created = models.DateTimeField(auto_now_add=True)
