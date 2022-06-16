@@ -1,4 +1,5 @@
 import itertools
+import time
 from contextlib import suppress
 
 import boto3
@@ -116,6 +117,57 @@ class AwsEc2Client:
         result.sort()
 
         return result
+
+    def get_instance(self, instance_id):
+        """Returns the data of a single EC2 instance from the sdk."""
+
+        return self.client.describe_instances(InstanceIds=[instance_id])[
+            "Reservations"
+        ][0]["Instances"][0]
+
+    def get_instance_state(self, instance_id):
+        """
+        Given the instance_id, returns the current state of the instance.
+
+        Possible Values:
+            1. pending
+            2. running
+            3. shutting-down
+            4. terminated
+            5. stopping
+            6. stopped
+        """
+
+        return self.get_instance(instance_id)["State"]["Name"]
+
+    def stop_instance(self, instance_id) -> (bool, str):
+        """
+        Given the instance_id, this will stop the instance, wait for the
+        instance to stop, then returns when stopped.
+        """
+
+        try:
+            # initial checking
+            state = self.get_instance_state(instance_id)
+            assert (
+                state == "running"
+            ), "Instance is not in running state."  # let it go to the FE
+
+            # stop instance
+            self.client.stop_instances(InstanceIds=[instance_id])
+
+            # wait till stopped
+            while state != "stopped":
+
+                print(f"Waiting for instance to stop. Current state: {state}.")  # noqa
+                time.sleep(10)
+
+                state = self.get_instance_state(instance_id)
+
+        except Exception as e:
+            return False, str(e)
+
+        return True, None
 
 
 def get_client():
