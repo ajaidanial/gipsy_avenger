@@ -140,6 +140,23 @@ class AwsEc2Client:
 
         return self.get_instance(instance_id)["State"]["Name"]
 
+    def wait_for_instance(self, for_state, instance_id):
+        """
+        Given the instance_id, this will wait till the instance is in
+        the given `for_state`. Used in start & stop instance.
+        """
+
+        state = self.get_instance_state(instance_id)
+
+        # wait
+        while state != for_state:
+            print(  # noqa
+                f"Waiting for instance to become {for_state}. Current state: {state}."
+            )
+            time.sleep(10)
+
+            state = self.get_instance_state(instance_id)
+
     def start_instance(self, instance_id) -> (bool, str):
         """
         Given the instance_id, this will start the instance and will
@@ -151,18 +168,13 @@ class AwsEc2Client:
             state = self.get_instance_state(instance_id)
             assert (
                 state == "stopped"
-            ), "Instance is not in stopped state."  # let it go to the FE
+            ), "Instance is not in stopped state to start."  # let it go to the FE
 
             # start instance
             self.client.start_instances(InstanceIds=[instance_id])
 
             # wait till started
-            while state != "running":
-
-                print(f"Waiting for instance to start. Current state: {state}.")  # noqa
-                time.sleep(10)
-
-                state = self.get_instance_state(instance_id)
+            self.wait_for_instance(for_state="running", instance_id=instance_id)
 
         except Exception as e:
             return False, str(e)
@@ -180,18 +192,13 @@ class AwsEc2Client:
             state = self.get_instance_state(instance_id)
             assert (
                 state == "running"
-            ), "Instance is not in running state."  # let it go to the FE
+            ), "Instance is not in running state to stop."  # let it go to the FE
 
             # stop instance
             self.client.stop_instances(InstanceIds=[instance_id])
 
             # wait till stopped
-            while state != "stopped":
-
-                print(f"Waiting for instance to stop. Current state: {state}.")  # noqa
-                time.sleep(10)
-
-                state = self.get_instance_state(instance_id)
+            self.wait_for_instance(for_state="stopped", instance_id=instance_id)
 
         except Exception as e:
             return False, str(e)
