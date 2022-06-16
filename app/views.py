@@ -1,7 +1,9 @@
 from django.http import HttpResponse
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView
 
-from app.models import AlterEC2Log
+from app.forms import AlterEC2RequestForm
+from app.models import AlterEC2Log, AlterEC2Request
 
 
 def server_ping_view(request):  # noqa
@@ -27,3 +29,31 @@ class DashboardPageView(TemplateView):
             }
         )
         return data
+
+
+class AlterEC2RequestCreateView(CreateView):
+    """View to create a scheduled request."""
+
+    form_class = AlterEC2RequestForm
+    template_name = "page_request_create.html"
+    success_url = reverse_lazy("request_list_page_view")
+
+
+class AlterEC2RequestListView(ListView):
+    """View to list all the scheduled requests."""
+
+    queryset = AlterEC2Request.objects.all()
+    template_name = "page_request_list.html"
+
+
+class AlterEC2RequestDeleteView(DeleteView):
+    """View to delete a given scheduled request."""
+
+    queryset = AlterEC2Request.objects.all()
+    success_url = reverse_lazy("request_list_page_view")
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request=request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request=request, *args, **kwargs)
