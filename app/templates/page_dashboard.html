@@ -1,5 +1,36 @@
 {% extends 'layout_main.html' %}
 
 {% block main_content %}
-Hello World!
+<p class="fs-4">Logs</p>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered mb-0">
+        <thead>
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Started On</th>
+                <th scope="col">Completed On</th>
+                <th scope="col">Error</th>
+                <th scope="col">For Request</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if logs %}
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.status }}</td>
+                <td>{{ log.started_on }}</td>
+                <td>{{ log.completed_on }}</td>
+                <td>{{ log.error }}</td>
+                <td>{{ log.for_request.name }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td class="text-center" colspan="100%">Nothing to show</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
