@@ -19,5 +19,11 @@ class DashboardPageView(TemplateView):
         """Necessary context."""
 
         data = super().get_context_data(**kwargs)
-        data.update({"logs": AlterEC2Log.objects.select_related("for_request")})
+        data.update(
+            {
+                "logs": AlterEC2Log.objects.order_by("-started_on").select_related(
+                    "for_request"
+                )
+            }
+        )
         return data
