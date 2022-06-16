@@ -144,6 +144,7 @@ class AwsEc2Client:
         """Changes the `instance_type` of the given instance with `instance_id`."""
 
         try:
+            print(f"Changing instance type to: {instance_type}")  # noqa
             self.client.modify_instance_attribute(
                 InstanceId=instance_id, InstanceType={"Value": instance_type}
             )
