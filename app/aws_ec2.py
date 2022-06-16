@@ -140,6 +140,19 @@ class AwsEc2Client:
 
         return self.get_instance(instance_id)["State"]["Name"]
 
+    def change_instance_type(self, instance_id, instance_type) -> (bool, str):
+        """Changes the `instance_type` of the given instance with `instance_id`."""
+
+        try:
+            self.client.modify_instance_attribute(
+                InstanceId=instance_id, InstanceType={"Value": instance_type}
+            )
+
+        except Exception as e:
+            return False, str(e)
+
+        return True, None
+
     def wait_for_instance(self, for_state, instance_id):
         """
         Given the instance_id, this will wait till the instance is in
@@ -210,3 +223,25 @@ def get_client():
     """Central adaptor function to return the app AWS client."""
 
     return AwsEc2Client()
+
+
+def change_instance_type(instance_id, instance_type) -> (bool, str):
+    """
+    Adaptor function which changes the instance_type of the instance_id.
+    Uses the following:
+        1. stop_instance
+        2. start_instance
+        3. change_instance_type
+    """
+
+    is_success, error = get_client().stop_instance(instance_id)
+
+    if is_success:
+        is_success, error = get_client().change_instance_type(
+            instance_id=instance_id, instance_type=instance_type
+        )
+
+        if is_success:
+            is_success, error = get_client().start_instance(instance_id)
+
+    return is_success, error
