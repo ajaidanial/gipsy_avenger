@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
+from django.views.generic import RedirectView
 
 from . import views
 
@@ -32,4 +33,5 @@ urlpatterns = [
         views.AppLogoutView.as_view(),
         name="logout_page_view",
     ),
+    path("", RedirectView.as_view(url=reverse_lazy("dashboard_page_view"))),
 ]
