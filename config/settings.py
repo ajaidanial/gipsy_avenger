@@ -135,3 +135,8 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 # Slack
 SLACK_NOTIFY_CHANNEL_ID = env.str("SLACK_NOTIFY_CHANNEL_ID", default="")
 SLACK_NOTIFY_BOT_ACCESS_TOKEN = env.str("SLACK_NOTIFY_BOT_ACCESS_TOKEN", default="")
+
+# Scheduler
+REQUEST_SCHEDULER_PERFORM_EC2_ACTIONS = env.bool(
+    "REQUEST_SCHEDULER_PERFORM_EC2_ACTIONS", default=True
+)  # used in `request_scheduler_beat_task`
