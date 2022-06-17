@@ -1,6 +1,7 @@
 import os
 
 from celery import Celery
+from celery.schedules import crontab
 
 # Celery Worker - normal configurations
 # ------------------------------------------------------------------------------
@@ -19,4 +20,9 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # Load task functions from all registered Django app configs.
 app.autodiscover_tasks()
 
-app.conf.beat_schedule = {}
+app.conf.beat_schedule = {
+    "request_scheduler_beat_task": {
+        "task": "app.tasks.request_scheduler_beat_task",
+        "schedule": crontab(minute="*/30"),  # every 30 minutes
+    },
+}

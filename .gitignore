@@ -263,4 +263,7 @@ staticfiles/
 # backups
 backups/*.sql.*
 
+# pid files
+*.pid
+
 ### End of Custom App Config
