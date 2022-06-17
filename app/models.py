@@ -1,3 +1,5 @@
+import requests
+from django.conf import settings
 from django.db import models
 from django.utils.datetime_safe import datetime
 
@@ -78,3 +80,26 @@ class AlterEC2Log(models.Model):
         self.status = "failure"
         self.error = error
         self.save()
+
+
+def post_on_slack_channel(message: str) -> (bool, str):
+    """
+    Given the message, this will post the message on the Slack
+    channel configured on the settings.py file.
+
+    Used on init and end of the scheduled request. Returns
+    (is_success, error) to the caller.
+    """
+
+    try:
+        requests.post(
+            url="https://slack.com/api/chat.postMessage",
+            data={"channel": settings.SLACK_NOTIFY_CHANNEL_ID, "text": message},
+            headers={
+                "Authorization": f"Bearer {settings.SLACK_NOTIFY_BOT_ACCESS_TOKEN}"
+            },
+        )
+
+        return True, None
+    except Exception as e:
+        return False, str(e)
