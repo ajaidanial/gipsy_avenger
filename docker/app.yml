@@ -18,7 +18,7 @@ services:
       - redis
       - postgres
       - supervisor
-    command: bash -c "python manage.py migrate && gunicorn config.asgi -b 0.0.0.0:8000 --chdir=/app -k uvicorn.workers.UvicornWorker --reload"
+    command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.asgi -b 0.0.0.0:8000 --chdir=/app -k uvicorn.workers.UvicornWorker --reload"
 
   redis:
     image: redis:latest
