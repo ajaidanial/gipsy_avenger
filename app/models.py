@@ -39,6 +39,9 @@ class AlterEC2Request(models.Model):
         Creates the necessary logs and returns the same.
         """
 
+        post_on_slack_channel(
+            message=f"Processing request `{self.name}`, changing instance to `{self.change_to_instance_type}`."
+        )
         return AlterEC2Log.objects.create(for_request=self)
 
 
@@ -73,6 +76,10 @@ class AlterEC2Log(models.Model):
         self.error = None
         self.save()
 
+        post_on_slack_channel(
+            message=f"Request `{self.for_request.name}` succeeded :tada:"
+        )
+
     def handle_error(self, error: str):
         """Handles the fact that the request has completed with an error."""
 
@@ -80,6 +87,10 @@ class AlterEC2Log(models.Model):
         self.status = "failure"
         self.error = error
         self.save()
+
+        post_on_slack_channel(
+            message=f"Request `{self.for_request.name}` failed :cry:\nError: `{self.error}`"
+        )
 
 
 def post_on_slack_channel(message: str) -> (bool, str):
