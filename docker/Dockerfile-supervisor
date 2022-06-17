@@ -1,0 +1,14 @@
+FROM python:3.9.7-slim-buster
+
+# Initial update & initial dependencies
+RUN apt-get update && apt-get install -y supervisor gcc python3-dev libpq-dev
+
+# Install requirements
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+# supervisor conf & related files
+COPY ./docker/supervisord.conf /etc/supervisor/supervisord.conf
+
+# Custom working directory
+WORKDIR /app
