@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView
+from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView
@@ -78,3 +79,9 @@ class AppLoginView(DjangoLoginView):
     """View to make the user login to the application."""
 
     template_name = "page_login.html"
+
+
+class AppLogoutView(DjangoLogoutView):
+    """View to log out the user."""
+
+    next_page = reverse_lazy("login_page_view")
