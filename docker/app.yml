@@ -1,0 +1,51 @@
+version: '3'
+
+volumes:
+  production_postgres_data: { }
+
+services:
+  web:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile-web
+    volumes:
+      - ../:/app:z
+    env_file:
+      - ../.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+      - supervisor
+    command: bash -c "python manage.py migrate && gunicorn config.asgi -b 0.0.0.0:8000 --chdir=/app -k uvicorn.workers.UvicornWorker --reload"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  supervisor:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile-supervisor
+    volumes:
+      - ../:/app:z
+    env_file:
+      - ../.env
+    ports:
+      - "5555:5555"
+      - "9001:9001"
+    depends_on:
+      - redis
+      - postgres
+    command: /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+
+  postgres:
+    image: postgres:12.7-alpine
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data:Z
+    env_file:
+      - ../.env
+    ports:
+      - "5432:5432"

@@ -75,9 +75,17 @@ STATIC_ROOT = str(BASE_DIR / "staticfiles")
 # Database
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env.str("POSTGRES_DB", default=""),
+        "USER": env.str("POSTGRES_USER", default=""),
+        "PASSWORD": env.str("POSTGRES_PASSWORD", default=""),
+        "HOST": env.str("POSTGRES_HOST", default=""),
+        "PORT": env.str("POSTGRES_PORT", default=""),
     }
 }
 
@@ -103,3 +111,23 @@ LOGIN_REDIRECT_URL = reverse_lazy("dashboard_page_view")
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
 AWS_REGION_NAME = env.str("AWS_REGION_NAME", "")
+
+# Async & Celery
+CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": CELERY_BROKER_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": False,
+        },
+    }
+}
+if USE_TZ:
+    CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
