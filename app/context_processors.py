@@ -19,5 +19,10 @@ def template_common(request):
                 "url": reverse_lazy("request_list_page_view"),
                 "highlight": "requests",
             },
+            {
+                "display": "Logout",
+                "url": reverse_lazy("logout_page_view"),
+                "highlight": "logout",  # not needed
+            },
         ],
     }
