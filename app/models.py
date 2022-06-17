@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.datetime_safe import datetime
 
 from app.config import DAYS_OF_WEEK_CHOICES
 
@@ -30,6 +31,14 @@ class AlterEC2Request(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
+    def handle_started(self):
+        """
+        Handles the fact that the scheduled time for the request has come.
+        Creates the necessary logs and returns the same.
+        """
+
+        return AlterEC2Log.objects.create(for_request=self)
+
 
 class AlterEC2Log(models.Model):
     """Just a log for `AlterEC2Request`. Represented to the user."""
@@ -53,3 +62,19 @@ class AlterEC2Log(models.Model):
         on_delete=models.CASCADE,
         related_name="related_alter_ec2_logs",
     )
+
+    def handle_success(self):
+        """Handles the fact that the request is completed successfully."""
+
+        self.completed_on = datetime.now()
+        self.status = "success"
+        self.error = None
+        self.save()
+
+    def handle_error(self, error: str):
+        """Handles the fact that the request has completed with an error."""
+
+        self.completed_on = datetime.now()
+        self.status = "failure"
+        self.error = error
+        self.save()
